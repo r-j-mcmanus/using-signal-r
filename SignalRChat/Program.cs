@@ -1,8 +1,27 @@
-using SignalRChat.Hubs; // 1
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+using SignalRChat.Hubs;
+
+using WebApp1.Data;
+
+// dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+// dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+// dotnet add package Microsoft.AspNetCore.Identity.UI
+
+////////////
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR(); // 2
+builder.Services.AddDbContext<AppLoginDbContext>(opt => 
+    opt.UseSqlite("Data Source=Users.db")
+);
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<AppLoginDbContext>();
+
+
+builder.Services.AddSignalR();
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins"; //4
 builder.Services.AddCors(options =>
@@ -15,11 +34,14 @@ builder.Services.AddCors(options =>
                                 .AllowAnyMethod()
                                 .AllowCredentials();
                       });
-}); // 4
+});
 
+
+////////////
 
 var app = builder.Build();
-app.UseCors(MyAllowSpecificOrigins); // 5
+app.UseCors(MyAllowSpecificOrigins);
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

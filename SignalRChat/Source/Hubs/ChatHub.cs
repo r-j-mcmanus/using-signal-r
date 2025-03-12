@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Identity;
 
 /*
 
@@ -11,8 +12,9 @@ How It Works in a Web Application
 */
 
 namespace SignalRChat.Hubs 
-//namespace means that things defined within can only be accessed with explicit reffereance to the namespace, preventing naming conflicts
+//namespace means that things defined within can only be accessed with explicit reference to the namespace, preventing naming conflicts
 {
+    [Authorize]
     public class ChatHub : Hub
     //A hub is a high-level pipeline that clients can connect to and invoke methods on the server.
     {

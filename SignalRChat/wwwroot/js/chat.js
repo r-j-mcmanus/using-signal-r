@@ -1,7 +1,12 @@
 
 
+const token = "YOUR_JWT_TOKEN"; // Get this from local storage or session
+
+
 const connection = new signalR.HubConnectionBuilder() //  Creates a new SignalR client connection.
-    .withUrl("http://localhost:5235/chathub") // Specifies the URL of the SignalR hub
+    .withUrl("http://localhost:5235/chathub", {
+        accessTokenFactory: () => token
+    }) // Specifies the URL of the SignalR hub
     .configureLogging(signalR.LogLevel.Information)
     .build()
 

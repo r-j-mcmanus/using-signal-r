@@ -61,16 +61,19 @@ builder.Services.AddAuthentication(options => // sets up the authentication syst
       // for more information about security considerations when using
       // the query string to transmit the access token.
       // Query string -> part of the url, NOT the header sent
+      options.Authority = "https://localhost:5235"; // Ensure this matches your Identity URL
+
       options.Events = new JwtBearerEvents
       {
           OnMessageReceived = context =>
           {
+              Console.WriteLine("Here");
               var accessToken = context.Request.Query["access_token"];
 
               // If the request is for our hub...
               var path = context.HttpContext.Request.Path;
               if (!string.IsNullOrEmpty(accessToken) &&
-                  (path.StartsWithSegments("/hubs/chat")))
+                  (path.StartsWithSegments("/chathub")))
               {
                   // Read the token out of the query string
                   context.Token = accessToken;
